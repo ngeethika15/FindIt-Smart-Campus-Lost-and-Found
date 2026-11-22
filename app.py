@@ -1,4 +1,3 @@
-
 import streamlit as st
 import sqlite3
 import hashlib
@@ -1613,13 +1612,17 @@ def possible_matches():
         st.info("There are no active lost-item reports in this view yet.")
         return
 
-    chosen = st.selectbox(
+    lost_by_id = {r["id"]: r for r in lost_items}
+
+    selected_id = st.selectbox(
         "Select a lost item",
-        lost_items,
-        format_func=lambda x: (
-            f"{x['item_name']} · Report #{x['id']}"
+        options=[r["id"] for r in lost_items],
+        format_func=lambda rid: (
+            f"{lost_by_id[rid]['item_name']} · Report #{rid}"
         )
     )
+
+    chosen = lost_by_id[selected_id]
 
     st.markdown("### Possible found-item matches")
 
